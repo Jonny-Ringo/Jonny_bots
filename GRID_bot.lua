@@ -80,7 +80,7 @@ Handlers.add(
   function (msg)
     print(colors.green .. "Waking up GRID Bot".. colors.reset)
     InAction = false
-    ao.send({Target = Game, Action = "Tick"})
+    Send({Target = Game, Action = "GetGameState", Name = Name , Owner = Owner})
   end
 )
 
