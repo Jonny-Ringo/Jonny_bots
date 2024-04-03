@@ -14,10 +14,6 @@ Send({Target ="Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Transfer"
 ```
 Send({Target ="Sa0iBLPNyJQrwpTTG-tWLQU-1QeUAJA73DdxGGiKoJc", Action = "Transfer", Quantity = "1000", Recipient = Game}) -- This enters your Bot into the GRID with 100 Health
 ```
-### 5. Wake The Bot Up For The First Round
-```
-Send({Target = ao.id, Action = "Tick"}) -- This is only needed for the first round, the Bot will wake itself up successfully after this first round
-```
 
 ### Exit the GRID with your Winnings
 ```
