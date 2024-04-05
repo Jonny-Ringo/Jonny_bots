@@ -108,9 +108,11 @@ Handlers.add(
     local json = require("json")
     LatestGameState = json.decode(msg.Data)
     ao.send({Target = ao.id, Action = "UpdatedGameState"})
-    print("Game state updated. Print \'LatestGameState\' for detailed view.")
+    --print(LatestGameState)
   end
 )
+
+
 
 -- Handler to decide the next best action.
 Handlers.add(
@@ -132,23 +134,17 @@ Handlers.add(
   "ReturnAttack",
   Handlers.utils.hasMatchingTag("Action", "Hit"),
   function (msg)
-    if not InAction then -- InAction logic added
-      InAction = true -- InAction logic added
-      local playerEnergy = LatestGameState.Players[ao.id].energy
-      if playerEnergy == undefined then
-        print(colors.red .. "Unable to read energy." .. colors.reset)
-        ao.send({Target = Game, Action = "Attack-Failed", Reason = "Unable to read energy."})
-      elseif playerEnergy == 0 then
-        print(colors.red .. "Player has insufficient energy." .. colors.reset)
-        ao.send({Target = Game, Action = "Attack-Failed", Reason = "Player has no energy."})
-      else
-        print(colors.red .. "Returning attack." .. colors.reset)
-        ao.send({Target = Game, Action = "PlayerAttack", Player = ao.id, AttackEnergy = tostring(playerEnergy)})
-      end
-      InAction = false -- InAction logic added
-      ao.send({Target = ao.id, Action = "Tick"})
+    local playerEnergy = LatestGameState.Players[ao.id].energy
+    if playerEnergy == undefined then
+      print(colors.red .. "Unable to read energy." .. colors.reset)
+      ao.send({Target = Game, Action = "Attack-Failed", Reason = "Unable to read energy."})
+    elseif playerEnergy > 10 then
+      print(colors.red .. "Player is too tired" .. colors.reset)
+      ao.send({Target = Game, Action = "Attack-Failed", Reason = "Player has no energy."})
     else
-      print("Previous action still in progress. Skipping.")
+      print(colors.red .. "Returning attack..." .. colors.reset)
+      ao.send({Target = Game, Action = "PlayerAttack", AttackEnergy = tostring(playerEnergy)})
     end
+    ao.send({Target = ao.id, Action = "Tick"})
   end
 )
